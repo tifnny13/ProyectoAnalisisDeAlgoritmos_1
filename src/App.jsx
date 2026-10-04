@@ -18,7 +18,7 @@ function App() {
             <th>ID</th>
             <th>Peso</th>
             <th>Ganancia</th>
-            <th>Coordenadas</th>
+            <th>Coordenadass</th>
           </tr>
         </thead>
         <tbody>
