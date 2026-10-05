@@ -18,7 +18,7 @@ function App() {
             <th>ID</th>
             <th>Peso</th>
             <th>Ganancia</th>
-            <th>Coordenadass</th>
+            <th>Coordenadas</th>
           </tr>
         </thead>
         <tbody>
@@ -33,7 +33,7 @@ function App() {
         </tbody>
       </table>
     {/* 2. TABLA SELECCIONADOS */}
-    <h2>Pedidos Seleccionados para la Mochila</h2>
+    <h2>Pedidos Seleccionados para el Camión</h2>
 <p>
         <strong>Capacidad Máxima:</strong> {capacidadMochila} kg |{' '}
         <strong>Peso Actual:</strong> {pesoActual} kg |{' '}
