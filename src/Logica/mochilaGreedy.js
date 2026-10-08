@@ -9,8 +9,10 @@ export function problemaMochila(pedidos, capacidad) { //.map crea una nueva list
     let pedidosEscogidos = [];
     let pesoActual = 0;
     let gananciaTotal = 0;
+    let operaciones = 0;
 
     for (const pedido of pedidosPorOrdenPeso) {
+        operaciones++;
         if (pesoActual + pedido.peso <= capacidad) { 
             pedidosEscogidos.push(pedido);
             pesoActual += pedido.peso;
@@ -18,5 +20,5 @@ export function problemaMochila(pedidos, capacidad) { //.map crea una nueva list
         }
     }
 
-    return { pedidosEscogidos, pesoActual, gananciaTotal };
+    return { pedidosEscogidos, pesoActual, gananciaTotal, operaciones };
 }
