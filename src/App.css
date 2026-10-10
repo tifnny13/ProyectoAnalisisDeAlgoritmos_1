@@ -174,3 +174,35 @@
   font-weight: 500;
   font-size: 0.95rem;
 }
+
+.grid-estadisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.tarjeta-metrica {
+  background: #13151c;
+  border: 1px solid #2d3342;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.metrica-etiqueta {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.metrica-valor {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f3f4f6;
+}
+
+
