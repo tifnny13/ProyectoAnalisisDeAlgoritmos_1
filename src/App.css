@@ -133,3 +133,44 @@
 .btn-primario:active {
   transform: scale(0.98);
 }
+
+.indicador-direccion {
+  color: #9ca3af;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+.ruta-contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.ruta-paso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.parada-bodega {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.parada-pedido {
+  background: #13151c;
+  color: #e5e7eb;
+  border: 1px solid #3b4252;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
