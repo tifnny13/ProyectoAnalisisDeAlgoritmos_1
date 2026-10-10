@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { pedidosPrueba, generarPedidos } from './Logica/pedidos'; //Importa desde Logica los pedidos
 import {problemaMochila} from './Logica/mochilaGreedy';
 import Estadisticas from './Estadisticas';
-
+import {vecinoMasCercano } from './Logica/ruteoGreedy';
 function App() {
   const [capacidadMochila, setCapacidadMochila] = useState(50); // guarda y nos permite cambiar el valor 
   const [pedidos, setPedidos] = useState(pedidosPrueba);
@@ -20,6 +20,7 @@ function App() {
 
   const { pedidosEscogidos, pesoActual, gananciaTotal, operaciones } = resultado;  //Algoritmo voraz 
 
+  const { ruta, distanciaTotal } = vecinoMasCercano(pedidosEscogidos);
   return (
     <>
       {mostrarEstadisticas ? (
@@ -126,6 +127,26 @@ function App() {
           </table>
         </div>
       </div>
+      {/* 4. RUTA DE ENTREGA */}
+          <div className="card">
+            <h2>Ruta de Entrega </h2>
+            <p>
+              <strong>Distancia Total de la Ruta:</strong> {distanciaTotal ?? 0} km
+            </p>
+
+            <div className="ruta-contenedor">
+              {ruta && ruta.length > 0 && ruta.map((parada, index) => ( 
+                <div key={index} className="ruta-paso">
+                  <span className={parada.id === 'Bodega' ? 'parada-bodega' : 'parada-pedido'}>
+                    {parada.id} ({parada.x}, {parada.y})
+                  </span>
+                  {index < ruta.length - 1 && (
+                    <span className="indicador-direccion">➔</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
           <button 
             className="btn-primario"
             onClick={() => setMostrarEstadisticas(true)}>
