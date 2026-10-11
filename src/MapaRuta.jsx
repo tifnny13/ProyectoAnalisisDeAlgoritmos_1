@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { calcularCoordenadasRuta, calcularCaminoPorCalles, agruparParadas} from './Logica/mapaRuta';
 
 function MapaRuta({ ruta }) {
@@ -8,10 +7,11 @@ function MapaRuta({ ruta }) {
   const [iniciada, setIniciada] = useState(false);
   const [pausada, setPausada] = useState(false);
   const [posicionCamion, setPosicionCamion] = useState(0);
+  const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
 
-  const coordenadas = calcularCoordenadasRuta(ruta);
-  const camino = calcularCaminoPorCalles(coordenadas);
-  const gruposParadas = agruparParadas(coordenadas);
+  const coordenadas = useMemo(() => calcularCoordenadasRuta(ruta), [ruta]);
+  const camino = useMemo(() => calcularCaminoPorCalles(coordenadas),[coordenadas]);
+  const gruposParadas = useMemo(() => agruparParadas(coordenadas),[coordenadas]);
 
   // Mover el camión mientras la ruta esté iniciada
   useEffect(() => {
@@ -32,6 +32,14 @@ function MapaRuta({ ruta }) {
 
     return () => clearInterval(intervalo);
   }, [iniciada, pausada, camino.length]);
+
+  // Reiniciar la animación cuando cambie la ruta
+  useEffect(() => {
+    setIniciada(false);
+    setPausada(false);
+    setPosicionCamion(0);
+  }, [ruta]);
+
 
   const iniciarRuta = () => {
     if (camino.length > 0) {
@@ -175,40 +183,59 @@ function MapaRuta({ ruta }) {
         );
 
         return (
-                <g key={`grupo-${index}`}>
-                    <circle
-                        cx={grupo.posicionX}
-                        cy={grupo.posicionY}
-                        r={grupo.pedidos.length > 1 ? 15 : 9}
-                        fill={contieneBodega ? '#dc2626' : '#2563eb'}
-                        stroke="#ffffff"
-                        strokeWidth="2"
-                    />
+          <g
+            key={`grupo-${index}`}
+            onClick={() => setGrupoSeleccionado(grupo)}
+            style={{ cursor: 'pointer' }}
+          >
+            <circle
+              cx={grupo.posicionX}
+              cy={grupo.posicionY}
+              r={grupo.pedidos.length > 1 || contieneBodega ? 15 : 9}
+              fill={contieneBodega ? '#dc2626' : '#2563eb'}
+              stroke="#ffffff"
+              strokeWidth="2"
+            />
 
-                    {grupo.pedidos.length > 1 ? (
-                        <text
-                            x={grupo.posicionX}
-                            y={grupo.posicionY + 4}
-                            textAnchor="middle"
-                            fontSize="12"
-                            fontWeight="bold"
-                            fill="#ffffff"
-                            >
-                            {grupo.pedidos.length}
-                        </text>
-                     ) : (
-                        <text
-                            x={grupo.posicionX + 12}
-                            y={grupo.posicionY - 12}
-                            fontSize="12"
-                            fontWeight="bold"
-                            fill="#1f2937"
-                            >
-                            {grupo.pedidos[0].id}
-                        </text>
-                    )}
-                </g>
-            );
+            {contieneBodega ? (
+              <text
+                x={grupo.posicionX + 10}
+                y={grupo.posicionY + 25}
+                fontSize="12"
+                fontWeight="bold"
+                fill="#1f2937"
+              >
+                Bodega
+              </text>
+
+            ) : grupo.pedidos.length > 1 ? (
+              <text
+                x={grupo.posicionX}
+                y={grupo.posicionY + 4}
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="bold"
+                fill="#ffffff"
+              >
+              {grupo.pedidos.length}
+
+              </text>
+            ) : (
+           
+              <text
+                x={grupo.posicionX > 370 ? grupo.posicionX - 12 : grupo.posicionX + 12}
+                y={grupo.posicionY - 12}
+                textAnchor={grupo.posicionX > 370 ? "end" : "start"}
+                fontSize="12"
+                fontWeight="bold"
+                fill="#1f2937"
+              >
+                {grupo.pedidos[0].id}
+              </text>
+
+            )}
+          </g>
+        );
         })}
 
 
@@ -243,6 +270,25 @@ function MapaRuta({ ruta }) {
         )}
       </svg>
 
+      {grupoSeleccionado && (
+        <div className="detalle-pedidos">
+          <h3>Pedidos en esta ubicación</h3>
+
+          {grupoSeleccionado.pedidos.map((pedido, index) => (
+            <p key={`${pedido.id}-${index}`}>
+              <strong>{pedido.id}</strong>
+              {' — Peso: '}
+              {pedido.peso}
+              {' — Ganancia: '}
+              {pedido.ganancia}
+            </p>
+          ))}
+
+          <button onClick={() => setGrupoSeleccionado(null)}>
+            Cerrar
+          </button>
+        </div>
+      )}
 
       <p>
         {iniciada

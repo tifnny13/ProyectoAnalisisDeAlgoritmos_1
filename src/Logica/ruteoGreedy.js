@@ -8,11 +8,11 @@ export function vecinoMasCercano(pedidos){
         return { ruta: [], distanciaTotal: 0 };
 
     }
-const pedidosPendientes = [...pedidos];
-const bodega = { id: 'Bodega', x: 0, y: 0 }; // Coordenadas de la bodega
-const ruta = [bodega]; //Inicia en bodega
-let rutaActual = bodega;
-let distanciaTotal = 0;
+  const pedidosPendientes = [...pedidos];
+  const bodega = { id: 'Bodega', x: 0, y: 0 }; // Coordenadas de la bodega
+  const ruta = [bodega]; //Inicia en bodega
+  let rutaActual = bodega;
+  let distanciaTotal = 0;
 
   while (pedidosPendientes.length > 0) {
     let indiceMasCercano = 0;
