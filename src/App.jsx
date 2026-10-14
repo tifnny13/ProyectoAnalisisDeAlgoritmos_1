@@ -5,7 +5,12 @@ import {problemaMochila} from './Logica/mochilaGreedy';
 import Estadisticas from './Estadisticas';
 import {vecinoMasCercano } from './Logica/ruteoGreedy';
 import MapaRuta from './MapaRuta';
-
+/**
+ * Componente principal de la aplicacion
+ * Controla la capacidad del camión, genera los pedidos
+ * corre los algoritmos de la mochila y la ruta, y permite alternar entre el panel de pedidos y la vista de estadísticas
+ * @returns {JSX.Element} La interfaz completa del sistema
+ */
 function App() {
   const [capacidadMochila, setCapacidadMochila] = useState(50); // guarda y nos permite cambiar el valor 
   const [pedidos, setPedidos] = useState(pedidosPrueba);

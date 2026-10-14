@@ -1,7 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { calcularCoordenadasRuta, calcularCaminoPorCalles, agruparParadas} from './Logica/mapaRuta';
-
-function MapaRuta({ ruta }) {
+/**
+ * Muestra el mapa en 2D con la animación del camión recorriendo las calles
+ * Dibuja la cuadrícula, traza la ruta entre las paradas, mueve el camión paso a paso 
+ * @param {Object} props  Propiedades del componente 
+ * @param {Array<Object>} props.ruta Lista de paradas a recorrer en orden
+ * @returns {JSX.Element} El mapa con los botones de control (iniciar, pausar y reiniciar)
+ */
+function MapaRuta({ ruta }) { 
   const tamaño = 500;
 
   const [iniciada, setIniciada] = useState(false);

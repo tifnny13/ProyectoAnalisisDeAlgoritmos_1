@@ -1,3 +1,9 @@
+/**
+ * Resuelve el problema de la mochila utilizando un enfoque greedy
+ * @param {Array<{id: string|number, peso: number, ganancia: number}>} pedidos 
+ * @param {number} capacidad 
+ * @returns {Object} Resultado con los pedidos escogidos y las estadísticas
+ */
 export function problemaMochila(pedidos, capacidad) {
     let operaciones = 0;
 
