@@ -1,8 +1,20 @@
-
+/**
+ * Array con las coordenadas de las calles en el eje X
+ */
 const calles = [80, 170, 260, 350, 440];
 
 // Coloca cada parada sobre la intersección más cercana
+/**
+ * Calcula las coordenadas de cada parada en la ruta, colocándola sobre la intersección más cercana
+ * @param {Array<{id: string|number, x: number, y: number}>} ruta Lista de paradas
+ * @returns {Array<Object>} Lista de paradas con coordenadas según la intersección más cercana
+ */
 export function calcularCoordenadasRuta(ruta) {
+/**
+   * Encuentra el valor de calle más cercano a una posición dada
+   * @param {number} posicion  Posición en píxeles en el lienzo
+   * @returns {number} Coordenada de la calle más cercana
+   */
   function calleCercana(posicion) {
     return calles.reduce((cercana, calle) => {
       return Math.abs(calle - posicion) < Math.abs(cercana - posicion)
@@ -24,20 +36,26 @@ export function calcularCoordenadasRuta(ruta) {
 }
 
 // Construye un recorrido usando únicamente las calles
+/**
+ * Calcula el camino por las calles entre las paradas
+ * @param {Array<{id: string|number, posicionX: number, posicionY: number}>} coordenadas Lista de coordenadas de las paradas
+ * @returns {Array<{x: number, y: number, id: string|number}>} Lista de puntos del camino por calles
+ */
 export function calcularCaminoPorCalles(coordenadas) {
   const camino = [];
+
 
   if (coordenadas.length === 0) {
     return camino;
   }
 
-  camino.push({
+  camino.push({ // Agrega la primera parada al camino
     x: coordenadas[0].posicionX,
     y: coordenadas[0].posicionY,
     id: coordenadas[0].id
   });
 
-  coordenadas.forEach((parada, index) => {
+  coordenadas.forEach((parada, index) => {  // Recorre cada parada para calcular el camino hacia ella
     if (index === 0) {
       return;
     }
@@ -77,10 +95,10 @@ export function calcularCaminoPorCalles(coordenadas) {
     // Identifica la parada de destino
     const ultimo = camino[camino.length - 1];
 
-    if (ultimo.x === parada.posicionX && ultimo.y === parada.posicionY) {
+    if (ultimo.x === parada.posicionX && ultimo.y === parada.posicionY) { // Si la última posición coincide con la parada, asigna el id de la parada
       ultimo.id = parada.id;
     } else {
-      camino.push({
+      camino.push({ 
         x: parada.posicionX,
         y: parada.posicionY,
         id: parada.id
@@ -91,7 +109,11 @@ export function calcularCaminoPorCalles(coordenadas) {
   return camino;
 }
 
-
+/**
+ * Agrupa las paradas por su ubicación en el mapa
+ * @param {Array<{id: string|number, posicionX: number, posicionY: number}>} coordenadas Lista de coordenadas de las paradas
+ * @returns {Array<{posicionX: number, posicionY: number, pedidos: Array<{id: string|number, posicionX: number, posicionY: number}>}>} Lista de grupos de paradas
+ */
 export function agruparParadas(coordenadas) {
   const grupos = [];
 

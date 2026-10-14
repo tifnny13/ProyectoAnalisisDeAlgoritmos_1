@@ -1,3 +1,7 @@
+/**
+ * Lista de pedidos de prueba para la entrega
+ * @type {Array<{id: string|number, peso: number, ganancia: number, x: number, y: number}>}
+ */
 export const pedidosPrueba = [
   { id: "Pedido1", peso: 20, ganancia: 60, x: 10, y: 20 },
   { id: "Pedido2", peso: 30, ganancia: 90, x: 30, y: 40 },
@@ -5,6 +9,11 @@ export const pedidosPrueba = [
   { id: "Pedido4", peso: 40, ganancia: 70, x: 80, y: 70 },
 ];
 
+/**
+ * Genera una lista de pedidos aleatorios
+ * @param {number} cantidad 
+ * @returns {Array<{id: string, peso: number, ganancia: number, x: number, y: number}>} Lista de pedidos generados
+ */
 export function generarPedidos(cantidad){
   let pedidos = []; 
 
