@@ -1,24 +1,46 @@
-export function problemaMochila(pedidos, capacidad) { //.map crea una nueva lista segun la funcion que se le pase
-    const pedidosConGanancia = pedidos.map(pedido => ({
-        ...pedido, //copiar y pegar los valores del pedido original
-        gananciaPorPeso: pedido.ganancia / pedido.peso
-    })); //Realiza el calculo de la ganancia segun el peso y lo guarda en un nuevo array
+export function problemaMochila(pedidos, capacidad) {
+    let operaciones = 0;
 
-    let pedidosPorOrdenPeso = pedidosConGanancia.sort((a, b) => b.gananciaPorPeso - a.gananciaPorPeso);
+    // Calcular la ganancia por peso de cada pedido
+    const pedidosConGanancia = pedidos.map(pedido => {
+        operaciones++; // Contar la división
+
+        return {
+            ...pedido,
+            gananciaPorPeso: pedido.ganancia / pedido.peso
+        };
+    });
+
+    // Ordenar los pedidos según su ganancia por peso
+    let pedidosPorOrdenPeso = pedidosConGanancia.sort((a, b) => {
+        operaciones++; // Contar cada comparación del ordenamiento
+        return b.gananciaPorPeso - a.gananciaPorPeso;
+    });
 
     let pedidosEscogidos = [];
     let pesoActual = 0;
     let gananciaTotal = 0;
-    let operaciones = 0;
 
+    // Revisar los pedidos para seleccionar los que caben
     for (const pedido of pedidosPorOrdenPeso) {
-        operaciones++;
-        if (pesoActual + pedido.peso <= capacidad) { 
+        operaciones++; // Contar la comprobación de capacidad
+
+        if (pesoActual + pedido.peso <= capacidad) {
             pedidosEscogidos.push(pedido);
+            operaciones++; // Contar la selección del pedido
+
             pesoActual += pedido.peso;
+            operaciones++; // Contar la actualización del peso
+
             gananciaTotal += pedido.ganancia;
+            operaciones++; // Contar la actualización de la ganancia
         }
     }
 
-    return { pedidosEscogidos, pesoActual, gananciaTotal, operaciones };
+    return {
+        pedidosEscogidos,
+        pesoActual,
+        gananciaTotal,
+        operaciones
+    };
 }
