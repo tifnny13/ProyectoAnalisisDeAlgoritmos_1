@@ -1,8 +1,16 @@
+import './App.css';
 import { useState } from 'react';
 import { pedidosPrueba, generarPedidos } from './Logica/pedidos'; //Importa desde Logica los pedidos
 import {problemaMochila} from './Logica/mochilaGreedy';
 import Estadisticas from './Estadisticas';
-
+import {vecinoMasCercano } from './Logica/ruteoGreedy';
+import MapaRuta from './MapaRuta';
+/**
+ * Componente principal de la aplicacion
+ * Controla la capacidad del camión, genera los pedidos
+ * corre los algoritmos de la mochila y la ruta, y permite alternar entre el panel de pedidos y la vista de estadísticas
+ * @returns {JSX.Element} La interfaz completa del sistema
+ */
 function App() {
   const [capacidadMochila, setCapacidadMochila] = useState(50); // guarda y nos permite cambiar el valor 
   const [pedidos, setPedidos] = useState(pedidosPrueba);
@@ -19,6 +27,7 @@ function App() {
 
   const { pedidosEscogidos, pesoActual, gananciaTotal, operaciones } = resultado;  //Algoritmo voraz 
 
+  const { ruta, distanciaTotal } = vecinoMasCercano(pedidosEscogidos);
   return (
     <>
       {mostrarEstadisticas ? (
@@ -30,69 +39,87 @@ function App() {
           gananciaTotal={gananciaTotal}
           tiempoEjecucion={tiempoEjecucion}
           operaciones={operaciones}
-          onVolver={() => setMostrarEstadisticas(false)}onChange
+          onVolver={() => setMostrarEstadisticas(false)}
         />
       ) : (
-        <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-          <h1>Planificación de Cargas y Ruteo</h1>
+        <div className="contenedor"> 
+          <h1 className = "Titulo-proyecto">Planificacion de cargas y ruteo</h1>
 
-          <label>
-            Capacidad del vehículo: <input type="number" value={capacidadMochila} onChange={(e) => setCapacidadMochila(Number(e.target.value))}/> kg
-          </label>
+          {/*1.PANEL DE CONFIGURACION */}
+          <div className="panel-configuracion">
+            <div className="campo">
+              <label>Capacidad del vehiculo (Kg):</label>
+              <input
+                type="number"
+                value={capacidadMochila}
+                onChange={(e) => setCapacidadMochila(Number(e.target.value))}
+              />
+            </div>
 
-          <label>
-            Cantidad de pedidos:<input type="number" value={cantidadPedidos} onChange={(e) => setCantidadPedidos(Number(e.target.value))} />
-          </label>
+          <div className="campo">
+            <label>Cantidad de pedidos:</label>
+            <input
+              type="number"
+              value={cantidadPedidos}
+              onChange={(e) => setCantidadPedidos(Number(e.target.value))}
+            />
 
-          <br />
+          </div>
 
-          <button onClick={() => setPedidos(generarPedidos(cantidadPedidos))}>
+          <button
+            className="btn-primario"
+            onClick={() => setPedidos(generarPedidos(cantidadPedidos))}
+          >
             Generar pedidos aleatorios
           </button>
-          
-          {/* 1. TABLA DISPONIBLES */}
-          <h2>Pedidos Disponibles en Bodega</h2>
+        </div>
 
-          <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse' }}>
+          {/* 2. TABLA DISPONIBLES EN BODEGA */}
+          <div className="card">
+            <h2>Pedidos Disponibles en Bodega</h2>
+            <div className="tabla-wrapper">
+              <table className="tabla-De-Datos">
+                <thead>
+                  <tr className="tabla-De-Datos-Encabezado">
+                    <th>ID</th>
+                    <th>Peso</th>
+                    <th>Ganancia</th>
+                    <th>Coordenadas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pedidos.map((pedido) => (
+                    <tr key={pedido.id}>
+                      <td>{pedido.id}</td>
+                      <td>{pedido.peso} kg</td>
+                      <td>${pedido.ganancia}</td>
+                      <td>({pedido.x}, {pedido.y})</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-            <thead>
-              <tr style={{ background: '#eee' }}>
-                <th>ID</th>
-                <th>Peso</th>
-                <th>Ganancia</th>
-                <th>Coordenadas</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {pedidos.map((pedido) => (
-                <tr key={pedido.id}>
-                  <td>{pedido.id}</td>
-                  <td>{pedido.peso} kg</td>
-                  <td>${pedido.ganancia}</td>
-                  <td>({pedido.x}, {pedido.y})</td>
-                </tr>
-              ))}
-            </tbody>
-
-          </table>
-
-          {/* 2. TABLA SELECCIONADOS */}
-          <h2>Pedidos Seleccionados para el Camión</h2>
+          {/* 3. TABLA SELECCIONADOS */}
+          <div className="card">
+            <h2>Pedidos Seleccionados para el Camión</h2>
             <p>
               <strong>Capacidad Máxima:</strong> {capacidadMochila} kg |{' '}
               <strong>Peso Actual:</strong> {pesoActual} kg |{' '}
               <strong>Ganancia Total:</strong> ${gananciaTotal}
             </p>
 
-          <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ background: '#d4edda', color: '#155724' }}>
+          <div className="tabla-wrapper">
+
+              <table className="tabla-De-Datos">  
+                <thead>
+                  <tr className="tabla-De-Datos-Encabezado">
                 <th>ID</th>
                 <th>Peso</th>
                 <th>Ganancia</th>
                 <th>Ganancia / Peso</th>
-              </tr>
+              </tr> 
             </thead>
             <tbody>
               {pedidosEscogidos.map((pedido) => (
@@ -105,8 +132,20 @@ function App() {
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+      {/* 4. RUTA DE ENTREGA */}
+          <div className="card">
+            <h2>Ruta de Entrega </h2>
+            <p>
+              <strong>Distancia Total de la Ruta:</strong> {distanciaTotal ?? 0} km
+            </p>
 
-          <button onClick={() => setMostrarEstadisticas(true)}>
+            <MapaRuta ruta={ruta} />
+          </div>
+          <button 
+            className="btn-primario"
+            onClick={() => setMostrarEstadisticas(true)}>
             Ver estadísticas
           </button>
         </div>
